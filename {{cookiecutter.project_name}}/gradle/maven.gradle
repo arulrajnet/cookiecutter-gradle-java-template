@@ -1,0 +1,13 @@
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      artifact sourcesJar
+      artifact javadocJar
+      artifact testJar
+    }
+  }
+}

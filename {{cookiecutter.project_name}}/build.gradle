@@ -1,0 +1,85 @@
+import java.time.Instant
+
+apply plugin: 'java'
+
+// external properties
+ext {
+    gradleVersion=3.5
+    javaVersion=1.8
+}
+
+group = '{{cookiecutter.maven_group_name}}'
+version = '0.0.1'
+
+description = """{{cookiecutter.project_short_description}}"""
+
+sourceCompatibility = "$javaVersion"
+targetCompatibility = "$javaVersion"
+
+defaultTasks 'clean', 'build'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    testCompile group: 'org.testng', name:'testng', version:'6.8.17'
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "$gradleVersion"
+  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+//packaging tests
+task testJar(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+//packaging source
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+//packaging javadoc
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+    archives testJar
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': description,
+            'Implementation-Version': version,
+            'Git-Commit-Id': 'git rev-parse HEAD'.execute().text.trim(),
+            'Git-Branch': 'git rev-parse --abbrev-ref HEAD'.execute().text.trim(),
+            'Created-By': System.properties['user.name'],
+            'Created-At': Instant.now().toString()
+    }
+}
+
+apply from: 'gradle/ide.gradle'
+apply from: 'gradle/maven.gradle'
+apply from: 'gradle/quality.gradle'
+apply from: 'gradle/license.gradle'
+apply from: 'gradle/spotless.gradle'
+apply from: 'gradle/docs.gradle'

@@ -1,0 +1,26 @@
+buildscript {
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2/' }
+  }
+  dependencies {
+    classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.4.0'
+  }
+}
+
+apply plugin: com.diffplug.gradle.spotless.SpotlessPlugin
+
+spotless {
+  java {
+    googleJavaFormat('1.3')
+    custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+    importOrder(['java', 'javax', 'org', 'com'])
+    trimTrailingWhitespace()
+    removeUnusedImports()
+  }
+  format 'misc', {
+    target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
+    indentWithSpaces(2)
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+}

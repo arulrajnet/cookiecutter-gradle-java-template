@@ -1,0 +1,28 @@
+[[cookiecutter-gradle-java-template]]
+= Gradle Java Templates
+Java project template using cookiecutter
+:toc: left
+
+== How to use
+
+== Project Structure
+
+=== License
+
+=== Code Quality
+
+=== Code Formatting
+
+=== Asciidoctor for docs
+
+
+=== IDE
+
+
+=== Git Hooks
+
+
+=== Java
+
+===
+

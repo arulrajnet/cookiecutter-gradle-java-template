@@ -1,0 +1,123 @@
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'jdepend'
+apply plugin: 'pmd'
+
+def versions = [
+  checkstyle: '7.8.1',
+  findbugs: '3.0.1',
+  jacoco: '0.7.9',
+  jdepend: '2.9.1',
+  pmd: '5.7.0'
+]
+
+test {
+  ignoreFailures = false
+  // show standard out and standard error of the test JVM(s) on the console
+  testLogging {
+    showStandardStreams = true
+    events 'started', 'passed'
+  }
+  useTestNG {
+    useDefaultListeners true
+    preserveOrder true
+    include '**/*Test.*'
+    exclude 'integration/**'
+  }
+  jacoco {
+    destinationFile = file("${buildDir}/jacoco/test.exec")
+  }
+  finalizedBy jacocoTestReport
+
+  def debugArgs = [
+    "-Xdebug",
+    "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009"
+  ]
+  jvmArgs = debugArgs
+  systemProperties System.getProperties()
+}
+
+configurations {
+  checkstyleConfig
+}
+
+dependencies {
+  checkstyleConfig dependencies.create("com.puppycrawl.tools:checkstyle:${versions.checkstyle}") {
+    transitive = false
+  }
+}
+
+checkstyle {
+  ignoreFailures = false
+  showViolations = true
+  toolVersion = "${versions.checkstyle}"
+  // configFile = file("${rootDir}/gradle/config/checkstyle/google_checks.xml")
+  config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
+}
+
+findbugs {
+  ignoreFailures = false
+  reportLevel = 'medium'
+  toolVersion = "${versions.findbugs}"
+}
+
+findbugsMain {
+  reports {
+    xml.enabled = false
+    xml.withMessages = true
+    html.enabled = !xml.isEnabled()
+  }
+}
+
+findbugsTest {
+  reports {
+    xml.enabled = false
+    xml.withMessages = true
+    html.enabled = !xml.isEnabled()
+  }
+}
+
+jacoco {
+  toolVersion = "${versions.jacoco}"
+  // applyTo run
+}
+
+jacocoTestReport {
+  group = 'Reporting'
+  description = 'Generate Jacoco coverage reports after running tests.'
+  executionData test
+  sourceSets sourceSets.main
+  additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+  reports {
+      xml.enabled false
+      csv.enabled false
+      html.destination "${buildDir}/reports/jacoco/html"
+  }
+}
+
+jdepend {
+  ignoreFailures = false
+  toolVersion = "${versions.jdepend}"
+}
+
+jdependMain {
+  reports {
+     xml.enabled true
+     text.enabled !xml.isEnabled()
+  }
+}
+
+jdependTest {
+  reports {
+     xml.enabled true
+     text.enabled !xml.isEnabled()
+  }
+}
+
+pmd {
+  ignoreFailures = false
+  toolVersion = "${versions.pmd}"
+}
+
+task qualityReports { dependsOn = ['checkstyleMain', 'pmdMain', 'findbugsMain', 'jacocoTestReport'] }

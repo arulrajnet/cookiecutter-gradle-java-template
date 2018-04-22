@@ -1,0 +1,13 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+eclipse {
+  classpath {
+    downloadSources true
+    downloadJavadoc true
+  }
+  jdt {
+    sourceCompatibility "$javaVersion"
+    targetCompatibility "$javaVersion"
+  }
+}

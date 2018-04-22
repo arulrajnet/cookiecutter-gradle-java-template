@@ -1,0 +1,46 @@
+buildscript {
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2/' }
+  }
+  dependencies {
+    classpath 'org.asciidoctor.convert:1.5.6.1'
+    classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
+  }
+}
+
+apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
+
+asciidoctor {
+  sources {
+    include "index.asciidoc"
+  }
+  outputDir file("${buildDir}/asciidoc")
+  //TODO remove once a working combination of asciidoctorj, asciidoctorj-pdf and asciidoctor-gradle-plugin is found
+  if (JavaVersion.current().isJava9Compatible()) {
+    backends = ['html5']
+  }
+  else {
+    backends = ['html5', 'pdf']
+  }
+  logDocuments = true
+  options = [
+      doctype: 'book'
+  ]
+  attributes docinfo: '',
+      toc2: '',
+      'compat-mode': '',
+      'allow-uri-read': '',
+      appversion: version,
+      'source-highlighter': 'coderay'
+
+  doLast {
+    file("$outputDir/pdf/index.pdf").renameTo ("$outputDir/pdf/{{cookiecutter.project_name}}-user-guide-${version}.pdf")
+  }
+}
+
+task docsZip(type: Zip, dependsOn: asciidoctor) {
+  baseName = '{{cookiecutter.project_name}}-docs'
+  from("${buildDir}/asciidoc/pdf/{{cookiecutter.project_name}}-user-guide-${version}.pdf") { into ("docs/") }
+  from("${buildDir}/asciidoc/html5/index.html") { into("docs/") }
+  from("${buildDir}/asciidoc/html5/images") { into("images/") }
+}
