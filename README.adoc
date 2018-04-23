@@ -24,5 +24,4 @@ Java project template using cookiecutter
 
 === Java
 
-===
 

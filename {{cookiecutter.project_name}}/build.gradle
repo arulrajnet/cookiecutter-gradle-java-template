@@ -37,6 +37,16 @@ dependencies {
     testCompile group: 'org.testng', name:'testng', version:'6.8.17'
 }
 
+task version {
+  // any code that goes here is part of configuring the task
+  // this code will always get run, even if the task is not executed
+  doLast { // add a task action
+    // any code that goes here is part of executing the task
+    // this code will only get run if and when the task gets executed
+    println project.version
+  }
+}
+
 task wrapper(type: Wrapper) {
   gradleVersion = "$gradleVersion"
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
@@ -73,8 +83,34 @@ jar {
             'Git-Commit-Id': 'git rev-parse HEAD'.execute().text.trim(),
             'Git-Branch': 'git rev-parse --abbrev-ref HEAD'.execute().text.trim(),
             'Created-By': System.properties['user.name'],
-            'Created-At': Instant.now().toString()
+            'Created-At': Instant.now().toString(),
+            'Class-Path': configurations.runtime.files.collect {"lib/$it.name" }.join(' ')
     }
+}
+
+task copyOthers(type: Copy) {
+   from 'src/main/resources/*'
+   into "$buildDir/libs"
+}
+
+task copyDependencies(type: Copy, dependsOn: ['clean', 'jar']) {
+    from copyOthers
+    from configurations.runtime
+    into "$buildDir/libs/lib"
+}
+
+task dist(dependsOn: ['distZip','distTar']) {
+    // do nothing
+}
+
+task distZip(type: Zip) {
+    dependsOn copyDependencies
+    from "$buildDir/libs"
+}
+
+task distTar(type: Tar) {
+    dependsOn copyDependencies
+    from "$buildDir/libs"
 }
 
 apply from: 'gradle/ide.gradle'
@@ -82,4 +118,5 @@ apply from: 'gradle/maven.gradle'
 apply from: 'gradle/quality.gradle'
 apply from: 'gradle/license.gradle'
 apply from: 'gradle/spotless.gradle'
-apply from: 'gradle/docs.gradle'
+apply from: 'gradle/doc.gradle'
+apply from: 'gradle/git.gradle'
