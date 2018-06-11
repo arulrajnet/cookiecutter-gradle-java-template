@@ -1,9 +1,7 @@
 {
-	"copyrights_name": "My Dream Inc.,",
-	"email": "thiago@avelino.xxx",
-	"github_username": "avelino",
-	"project_display_name": "My Java App",
+  "copyright_name": "My Dream Inc.,",
+  "project_display_name": "My Java App",
   "project_name": "myapp",
-  "maven_group_name": "com.githup.mydream",
-	"project_short_description": "A cookiecutter template for creating reusable Java projects quickly"
+  "package_name": "com.githup.mydream",
+  "project_short_description": "A cookiecutter template for creating reusable Java projects quickly"
 }

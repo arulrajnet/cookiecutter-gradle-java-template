@@ -8,7 +8,7 @@ ext {
     javaVersion=1.8
 }
 
-group = '{{cookiecutter.maven_group_name}}'
+group = '{{cookiecutter.package_name}}'
 version = '0.0.1'
 
 description = """{{cookiecutter.project_short_description}}"""
