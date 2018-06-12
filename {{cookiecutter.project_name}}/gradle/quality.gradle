@@ -100,9 +100,9 @@ jacocoTestReport {
   sourceSets sourceSets.main
   additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
   reports {
-      xml.enabled false
-      csv.enabled false
-      html.destination "${buildDir}/reports/jacoco/html"
+    xml.enabled false
+    csv.enabled false
+    html.destination "${buildDir}/reports/jacoco/html"
   }
 }
 
@@ -113,17 +113,17 @@ jdepend {
 
 jdependMain {
   reports {
-     xml.enabled true
-     text.enabled !xml.isEnabled()
+    xml.enabled true
+    text.enabled !xml.isEnabled()
   }
 }
 
 task jdependReport(dependsOn: [jdependMain,jdependTest] , group: 'verification', description: 'Generates a HTML report after executing jdepend checks.') {
   doLast {
     ant.xslt(
-       in: "${reporting.baseDir}/jdepend/main.xml",
-       style: "${rootDir}/gradle/config/jdepend/jdepend-report.xsl",
-       out:"${reporting.baseDir}/jdepend/main.html")
+      in: "${reporting.baseDir}/jdepend/main.xml",
+      style: "${rootDir}/gradle/config/jdepend/jdepend-report.xsl",
+      out:"${reporting.baseDir}/jdepend/main.html")
     ant.xslt(
       in: "${reporting.baseDir}/jdepend/test.xml",
       style: "${rootDir}/gradle/config/jdepend/jdepend-report.xsl",
@@ -133,8 +133,8 @@ task jdependReport(dependsOn: [jdependMain,jdependTest] , group: 'verification',
 
 jdependTest {
   reports {
-     xml.enabled true
-     text.enabled !xml.isEnabled()
+    xml.enabled true
+    text.enabled !xml.isEnabled()
   }
 }
 

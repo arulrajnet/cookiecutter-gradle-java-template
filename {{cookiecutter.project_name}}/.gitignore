@@ -49,6 +49,8 @@ RemoteSystemsTempFiles
 *.ipr
 *.class
 *.log
+*.sublime-*
+.vscode
 
 ## Maven files
 target
@@ -62,13 +64,9 @@ pom.properties
 ## Gradle files
 build
 .gradletasknamecache
+/bin/
 
 ## TestNG output
 test-output
 .*waf*
 /.ptp-sync/
-
-
-# Ignore sublime editor files
-*.sublime-*
-/bin/

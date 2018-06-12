@@ -6,15 +6,15 @@ buildscript {
 apply plugin: nl.javadude.gradle.plugins.license.LicensePlugin
 
 license {
-    include "**/*.java"
-    header rootProject.file('gradle/license.template')
-    strictCheck true
-    skipExistingHeaders true
-    ext {
-      copyright_range = Calendar.getInstance().get(Calendar.YEAR)
-      copyright_name = "{{cookiecutter.copyright_name}}"
-    }
-    mapping {
-      java = 'DOUBLESLASH_STYLE'
-    }
+  include "**/*.java"
+  header rootProject.file('gradle/license.template')
+  strictCheck true
+  skipExistingHeaders true
+  ext {
+    copyright_range = Calendar.getInstance().get(Calendar.YEAR)
+    copyright_name = "{{cookiecutter.copyright_name}}"
+  }
+  mapping {
+    java = 'DOUBLESLASH_STYLE'
+  }
 }
