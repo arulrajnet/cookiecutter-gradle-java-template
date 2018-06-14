@@ -34,6 +34,7 @@ buildscript {
 }
 
 dependencies {
+  compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
   compile group: 'org.slf4j', name: 'jcl-over-slf4j', version:'1.7.25'
   compile group: 'org.slf4j', name: 'jul-to-slf4j', version:'1.7.25'
   compile group: 'org.slf4j', name: 'log4j-over-slf4j', version:'1.7.25'

@@ -2,16 +2,21 @@ package {{cookiecutter.package_name}};
 
 import static org.testng.Assert.assertTrue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 /** Unit test for simple App. */
 public class AppTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
 
   public AppTest() {}
 
   /** Rigourous Test :-) */
   @Test
   public void testApp() {
+    LOG.debug("Rigourous Test");
     assertTrue(true);
   }
 }
