@@ -118,6 +118,24 @@ task distTar(type: Tar) {
   from "$buildDir/libs"
 }
 
+// For gradle run
+task run (type: JavaExec, dependsOn: classes){
+  if(project.hasProperty('arg')){
+    args(arg.split(','))
+  }
+  main = "{{cookiecutter.package_name}}.App"
+  classpath = sourceSets.main.runtimeClasspath
+  def debugArgs = [
+    "-Xdebug",
+    "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${APP_DEBUG_PORT}"
+  ]
+  def appArgs = [
+    "-Dyour.props.key=value",
+  ]
+  jvmArgs = appArgs + debugArgs
+  systemProperties System.getProperties()
+}
+
 apply from: 'gradle/ide.gradle'
 apply from: 'gradle/maven.gradle'
 apply from: 'gradle/quality.gradle'

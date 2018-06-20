@@ -4,7 +4,7 @@
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%p [%t] %c{1}.%M\(%L\) | %m%n</pattern>
+      <pattern>%d{ISO8601} %-5level [%thread] %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
 
