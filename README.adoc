@@ -5,9 +5,19 @@ Java project template using cookiecutter
 
 == How to use
 
+* Install python
+* Install pip
+* Install cookiecutter
+
+    cookiecutter https://github.com/arulrajnet/cookiecutter-gradle-java-template
+
 == Project Structure
 
 === License
+
+Supported licenses are MIT, GNU GPL v3.0, Apache Software License 2.0 and your Proprietary. By default Proprietary is selected.
+
+License text are from https://choosealicense.com/ and https://opensource.org/licenses/
 
 === Code Quality
 
