@@ -11,3 +11,10 @@ eclipse {
     targetCompatibility "$javaVersion"
   }
 }
+
+idea {
+  module {
+    downloadJavadoc = true
+    downloadSources = true
+  }
+}

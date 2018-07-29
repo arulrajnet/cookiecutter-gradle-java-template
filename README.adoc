@@ -2,36 +2,116 @@
 = Gradle Java Templates
 Java project template using cookiecutter
 :toc: left
+:icons: font
 
 == How to use
 
-* Install python
-* Install pip
+* Install python and pip
+
+    sudo apt-get install python python-pip -y
+
 * Install cookiecutter
+
+    sudo pip install -U cookiecutter
+
+Then
 
     cookiecutter https://github.com/arulrajnet/cookiecutter-gradle-java-template
 
+The output screen would be
+
+    copyright_name [My Dream Inc.,]: JCrawler Inc.,
+    Select license:
+    1 - Proprietary
+    2 - MIT
+    3 - GNU GPL v3.0
+    4 - Apache Software License 2.0
+    Choose from 1, 2, 3, 4 [1]: 1
+    project_display_name [My Java App]: Crawler App
+    project_name [myapp]: jcrawler
+    package_name [com.githup.mydream]: io.jcrawler.app
+    project_short_description [A cookiecutter template for creating reusable Java projects quickly]: To Be Done
+
+
 == Project Structure
 
-=== License
+    jcrawler
+    ├── gradle <1>
+    │   ├── config
+    │   │   ├── git <2>
+    │   │   └── jdepend <3>
+    │   └── wrapper
+    └── src
+        ├── docs
+        │   └── asciidoc <4>
+        │       └── stylesheets
+        ├── main
+        │   ├── java
+        │   │   └── io
+        │   │       └── jcrawler
+        │   │           └── app <5>
+        │   └── resources
+        └── test
+            ├── java
+            │   └── io
+            │       └── jcrawler
+            │           └── app <6>
+            └── resources
 
-Supported licenses are MIT, GNU GPL v3.0, Apache Software License 2.0 and your Proprietary. By default Proprietary is selected.
+<1> All gradle related files
+<2> Git hooks
+<3> Jdepend style sheet
+<4> Asciidoc files for the project
+<5> Source files.
+<6> Test files.
+
+== License
+
+Selecting license for a project is configurable. Supported licenses are
+
+* MIT
+* GNU GPL v3.0
+* Apache Software License 2.0
+* Proprietary.
+
+By default Proprietary is selected.
 
 License text are from https://choosealicense.com/ and https://opensource.org/licenses/
 
-=== Code Quality
+License plugin configured in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/license.gradle[license.gradle]
 
-=== Code Formatting
+== Code Quality
 
-=== Asciidoctor for docs
+The following code analysis tools are configured in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/quality.gradle[quality.gradle]
 
-
-=== IDE
-
-
-=== Git Hooks
-
-
-=== Java
+* PMD
+* CheckStyle
+* FindBugs
+* JDepend
+* JaCoCo
+* Sonar
 
 
+== Code Formatting
+
+Code formatting done using Spotless which is configured in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/spotless.gradle[spotless.gradle]
+
+== Asciidoctor for docs
+
+Docs for project can be written in link:https://asciidoctor.org/docs/user-manual/[AssciiDoctor]
+
+Gradle configuration in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/doc.gradle[doc.gradle]
+
+== IDE
+
+Both Eclipse and IntelliJ are configured in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/ide.gradle[ide.gradle]
+
+== Git Hooks
+
+`commit-msg` and `pre-push` git hooks are configured in link:https://github.com/arulrajnet/cookiecutter-gradle-java-template/blob/master/%7B%7Bcookiecutter.project_name%7D%7D/gradle/git.gradle[git.gradle]
+
+== Java
+
+Java 1.8
+
+Gradle 3.5
