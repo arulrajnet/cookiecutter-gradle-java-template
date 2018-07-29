@@ -4,8 +4,8 @@ apply plugin: 'java'
 
 // external properties
 ext {
-    gradleVersion=3.5
-    javaVersion=1.8
+  gradleVersion=3.5
+  javaVersion=1.8
 }
 
 group = '{{cookiecutter.package_name}}'
@@ -19,22 +19,33 @@ targetCompatibility = "$javaVersion"
 defaultTasks 'clean', 'build'
 
 tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+  options.encoding = 'UTF-8'
 }
 
 repositories {
-    mavenCentral()
-    mavenLocal()
+  mavenCentral()
+  mavenLocal()
 }
 
+// Do not remove this. Some plugins are using this like spotless.
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+  repositories {
+    mavenCentral()
+  }
+}
+
+// give test dependencies access to compileOnly dependencies to emulate providedCompile
+configurations {
+  testImplementation.extendsFrom compileOnly
 }
 
 dependencies {
-    testCompile group: 'org.testng', name:'testng', version:'6.8.17'
+  compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+  compile group: 'org.slf4j', name: 'jcl-over-slf4j', version:'1.7.25'
+  compile group: 'org.slf4j', name: 'jul-to-slf4j', version:'1.7.25'
+  compile group: 'org.slf4j', name: 'log4j-over-slf4j', version:'1.7.25'
+  compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
+  testCompile group: 'org.testng', name:'testng', version:'6.14.3'
 }
 
 task version {
@@ -60,57 +71,75 @@ task testJar(type: Jar) {
 
 //packaging source
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+  classifier = 'sources'
+  from sourceSets.main.allSource
 }
 
 //packaging javadoc
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+  classifier = 'javadoc'
+  from javadoc
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
-    archives testJar
+  archives sourcesJar
+  archives javadocJar
+  archives testJar
 }
 
 jar {
-    manifest {
-        attributes 'Implementation-Title': description,
-            'Implementation-Version': version,
-            'Git-Commit-Id': 'git rev-parse HEAD'.execute().text.trim(),
-            'Git-Branch': 'git rev-parse --abbrev-ref HEAD'.execute().text.trim(),
-            'Created-By': System.properties['user.name'],
-            'Created-At': Instant.now().toString(),
-            'Class-Path': configurations.runtime.files.collect {"lib/$it.name" }.join(' ')
-    }
+  manifest {
+    attributes 'Implementation-Title': description,
+      'Implementation-Version': version,
+      'Git-Commit-Id': 'git rev-parse HEAD'.execute().text.trim(),
+      'Git-Branch': 'git rev-parse --abbrev-ref HEAD'.execute().text.trim(),
+      'Created-By': System.properties['user.name'],
+      'Created-At': Instant.now().toString(),
+      'Class-Path': configurations.runtime.files.collect {"lib/$it.name" }.join(' ')
+  }
 }
 
 task copyOthers(type: Copy) {
-   from 'src/main/resources/*'
-   into "$buildDir/libs"
+  from 'src/main/resources/*'
+  into "$buildDir/libs"
 }
 
 task copyDependencies(type: Copy, dependsOn: ['clean', 'jar']) {
-    from copyOthers
-    from configurations.runtime
-    into "$buildDir/libs/lib"
+  from copyOthers
+  from configurations.runtime
+  into "$buildDir/libs/lib"
 }
 
 task dist(dependsOn: ['distZip','distTar']) {
-    // do nothing
+  // do nothing
 }
 
 task distZip(type: Zip) {
-    dependsOn copyDependencies
-    from "$buildDir/libs"
+  dependsOn copyDependencies
+  from "$buildDir/libs"
 }
 
 task distTar(type: Tar) {
-    dependsOn copyDependencies
-    from "$buildDir/libs"
+  dependsOn copyDependencies
+  from "$buildDir/libs"
+}
+
+// For gradle run
+task run (type: JavaExec, dependsOn: classes){
+  if(project.hasProperty('arg')){
+    args(arg.split(','))
+  }
+  main = "{{cookiecutter.package_name}}.App"
+  classpath = sourceSets.main.runtimeClasspath
+  def debugArgs = [
+    "-Xdebug",
+    "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${APP_DEBUG_PORT}"
+  ]
+  def appArgs = [
+    "-Dyour.props.key=value",
+  ]
+  jvmArgs = appArgs + debugArgs
+  systemProperties System.getProperties()
 }
 
 apply from: 'gradle/ide.gradle'

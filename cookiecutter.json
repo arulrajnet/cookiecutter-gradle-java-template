@@ -1,5 +1,6 @@
 {
   "copyright_name": "My Dream Inc.,",
+  "license": ["Proprietary", "MIT", "GNU GPL v3.0", "Apache Software License 2.0"],
   "project_display_name": "My Java App",
   "project_name": "myapp",
   "package_name": "com.githup.mydream",

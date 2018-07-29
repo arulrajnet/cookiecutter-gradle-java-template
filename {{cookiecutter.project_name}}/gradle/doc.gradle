@@ -24,14 +24,14 @@ asciidoctor {
   }
   logDocuments = true
   options = [
-      doctype: 'book'
+    doctype: 'book'
   ]
   attributes docinfo: '',
-      toc2: '',
-      'compat-mode': '',
-      'allow-uri-read': '',
-      appversion: version,
-      'source-highlighter': 'coderay'
+    toc2: '',
+    'compat-mode': '',
+    'allow-uri-read': '',
+    appversion: version,
+    'source-highlighter': 'coderay'
 
   doLast {
     file("$outputDir/pdf/index.pdf").renameTo ("$outputDir/pdf/{{cookiecutter.project_name}}-user-guide-${version}.pdf")
